@@ -13,6 +13,7 @@ BuildRequires:  lzo-devel
 BuildRequires:  pkgconfig(zlib)
 BuildRequires:  pkgconfig(libpng)
 BuildRequires:  pkgconfig(libssl)
+BuildRequires:  pkgconfig(libsystemd)
 BuildRequires:  libtool
 Summary: a library to make writing a vnc server easy
 
