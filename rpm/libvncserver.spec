@@ -5,6 +5,8 @@ Release:        1
 License:        GPLv2+ and MIT and BSD-2-Clause
 URL:            https://github.com/mer-qa/libvncserver
 Source:         %{name}-%{version}.tar.gz
+Requires(post): /sbin/ldconfig
+Requires(postun): /sbin/ldconfig
 BuildRequires:  cmake
 BuildRequires:  libjpeg-turbo-devel
 BuildRequires:  lzo-devel
@@ -39,21 +41,21 @@ Header Files for %{name}.
 
 %build
 %cmake . \
-	-DLIBVNCSERVER_INSTALL=ON \
-	-DBUILD_SHARED_LIBS=ON \
-	-DWITH_ZLIB=ON \
-	-DWITH_LZO=ON \
-	-DWITH_JPEG=ON \
-	-DWITH_PNG=ON \
-	-DWITH_SDL=OFF \
-	-DWITH_GTK=OFF \
-	-DWITH_THREADS=ON \
-	-DWITH_GNUTLS=OFF \
-	-DWITH_GCRYPT=OFF \
-	-DWITH_FFMPEG=OFF \
-	-DWITH_24BPP=OFF \
-	-DWITH_WEBSOCKETS=OFF \
-	-DWITH_SASL=OFF
+    -DLIBVNCSERVER_INSTALL=ON \
+    -DBUILD_SHARED_LIBS=ON \
+    -DWITH_ZLIB=ON \
+    -DWITH_LZO=ON \
+    -DWITH_JPEG=ON \
+    -DWITH_PNG=ON \
+    -DWITH_SDL=OFF \
+    -DWITH_GTK=OFF \
+    -DWITH_THREADS=ON \
+    -DWITH_GNUTLS=OFF \
+    -DWITH_GCRYPT=OFF \
+    -DWITH_FFMPEG=OFF \
+    -DWITH_24BPP=OFF \
+    -DWITH_WEBSOCKETS=OFF \
+    -DWITH_SASL=OFF
 
 
 %make_build
@@ -62,14 +64,12 @@ Header Files for %{name}.
 rm -rf %{buildroot}
 %make_install includedir="%{buildroot}%{_includedir}/rfb"
 
-%pre
-%post
-%preun
-%postun
+%post -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
 
 %files
 %defattr(-,root,root)
-%doc README.md AUTHORS ChangeLog NEWS.md TODO.md
+#%%doc README.md AUTHORS ChangeLog NEWS.md TODO.md
 %{_libdir}/libvncclient.so.*
 %{_libdir}/libvncserver.so.*
 
