@@ -5,7 +5,9 @@ Release:        1
 License:        GPLv2+ and MIT and BSD-2-Clause
 URL:            https://github.com/mer-qa/libvncserver
 Source:         %{name}-%{version}.tar.gz
+BuildRequires:  cmake
 BuildRequires:  libjpeg-turbo-devel
+BuildRequires:  lzo-devel
 BuildRequires:  pkgconfig(zlib)
 BuildRequires:  pkgconfig(libpng)
 BuildRequires:  pkgconfig(libssl)
@@ -36,22 +38,29 @@ Header Files for %{name}.
 %setup -q -n %{name}-%{version}/libvncserver
 
 %build
-./autogen.sh
-%configure --without-websockets \
-           --without-crypt \
-           --without-gnutls \
-           --without-gcrypt \
-           --disable-static
-make
+%cmake . \
+	-DLIBVNCSERVER_INSTALL=ON \
+	-DBUILD_SHARED_LIBS=ON \
+	-DWITH_ZLIB=ON \
+	-DWITH_LZO=ON \
+	-DWITH_JPEG=ON \
+	-DWITH_PNG=ON \
+	-DWITH_SDL=OFF \
+	-DWITH_GTK=OFF \
+	-DWITH_THREADS=ON \
+	-DWITH_GNUTLS=OFF \
+	-DWITH_GCRYPT=OFF \
+	-DWITH_FFMPEG=OFF \
+	-DWITH_24BPP=OFF \
+	-DWITH_WEBSOCKETS=OFF \
+	-DWITH_SASL=OFF
+
+
+%make_build
 
 %install
-[ -n "%{buildroot}" -a "%{buildroot}" != / ] && rm -rf %{buildroot}
-# make install prefix=%{buildroot}%{_prefix}
-%makeinstall includedir="%{buildroot}%{_includedir}/rfb"
-rm %{buildroot}/%{_libdir}/libvncclient.la %{buildroot}/%{_libdir}/libvncserver.la
-
-%clean
-[ -n "%{buildroot}" -a "%{buildroot}" != / ] && rm -rf %{buildroot}
+rm -rf %{buildroot}
+%make_install includedir="%{buildroot}%{_includedir}/rfb"
 
 %pre
 %post
@@ -60,14 +69,16 @@ rm %{buildroot}/%{_libdir}/libvncclient.la %{buildroot}/%{_libdir}/libvncserver.
 
 %files
 %defattr(-,root,root)
-%doc README INSTALL AUTHORS ChangeLog NEWS TODO 
-%{_libdir}/libvncclient.so*
-%{_libdir}/libvncserver.so*
+%doc README.md AUTHORS ChangeLog NEWS.md TODO.md
+%{_libdir}/libvncclient.so.*
+%{_libdir}/libvncserver.so.*
 
 %files devel
 %defattr(-,root,root)
 %{_includedir}/rfb/*
-%{_bindir}/libvncserver-config
+%{_libdir}/libvncclient.so
+%{_libdir}/libvncserver.so
+#%%{_bindir}/libvncserver-config
 %{_libdir}/pkgconfig/libvncclient.pc
 %{_libdir}/pkgconfig/libvncserver.pc
 
