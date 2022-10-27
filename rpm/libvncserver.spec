@@ -1,6 +1,6 @@
 # Note that this is NOT a relocatable package
 Name:           libvncserver
-Version:        0.9.10
+Version:        0.9.13
 Release:        1
 License:        GPLv2+ and MIT and BSD-2-Clause
 URL:            https://github.com/mer-qa/libvncserver
